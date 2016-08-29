@@ -127,6 +127,13 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         }
     }
 
+    private void initRefreshWeather(){
+        String s = mConfig.getParameter(Config.HISTORY_CITY);
+        if (!s.equals("")){
+            mWeather.getWeather(s);
+        }
+    }
+
     private void getScreenParam() {
         mScreen = new ScreenUtil(getActivity());
         mScreenX = mScreen.getScreenWidth();
@@ -194,6 +201,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 break;
             case R.id.iv_weather_refreshing:
                 //todo 点击刷新天气信息
+                initRefreshWeather();
                 break;
         }
     }
