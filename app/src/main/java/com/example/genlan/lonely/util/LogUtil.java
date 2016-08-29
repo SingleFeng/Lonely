@@ -43,6 +43,12 @@ public class LogUtil {
         }
     }
 
+    public static void v(Class<?> clazz, String msg) {
+        if (isDebug) {
+            Log.v("[" + clazz.getSimpleName() + "]", msg + "");
+        }
+    }
+
     public static void d(String tag, String msg) {
         if (isDebug) {
             Log.d("[" + tag + "]", msg + "");
@@ -64,6 +70,12 @@ public class LogUtil {
     public static void w(String tag, String msg) {
         if (isDebug) {
             Log.w("[" + tag + "]", msg + "");
+        }
+    }
+
+    public static void v(String tag, String msg) {
+        if (isDebug) {
+            Log.v("[" + tag + "]", msg + "");
         }
     }
 
@@ -91,5 +103,9 @@ public class LogUtil {
         }
     }
 
-
+    public static void v(String msg) {
+        if (isDebug) {
+            Log.v("[" + TAG + "]", msg + "");
+        }
+    }
 }

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TabHost;
 
 import com.example.genlan.lonely.R;
 import com.example.genlan.lonely.activity.mainfragment.FourthFragment;
@@ -82,7 +83,7 @@ public class MainActivity extends FragmentActivity implements WeatherFragment.On
     private void initFragment() {
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        no1Fg = new WeatherFragment();
+        no1Fg = WeatherFragment.newInstance("","");
         no2Fg = new SecondFragment();
         no3Fg = new ThirdFragment();
         no4Fg = new FourthFragment();
