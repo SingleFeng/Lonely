@@ -23,8 +23,11 @@ public class BaiduWeatherApi {
 
     private Context mContext;
 
-    public BaiduWeatherApi(Context context, OnConnectionSuccessListener listener) {
+    public BaiduWeatherApi(Context context) {
         this.mContext = context;
+    }
+
+    public void setOnConnectionListener( OnConnectionSuccessListener listener){
         this.listener = listener;
     }
 

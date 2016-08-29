@@ -1,10 +1,15 @@
 package com.example.genlan.lonely.activity.mainfragment;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -21,6 +26,7 @@ import com.example.genlan.lonely.config.Config;
 import com.example.genlan.lonely.config.ConfigSettings;
 import com.example.genlan.lonely.connection.BaiduWeatherApi;
 import com.example.genlan.lonely.data.WeatherBean;
+import com.example.genlan.lonely.server.WeatherServer;
 import com.example.genlan.lonely.util.LogUtil;
 import com.example.genlan.lonely.util.ScreenUtil;
 
@@ -39,8 +45,9 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     private int mScreenY = 0;
     private LinearLayout llCity;
     private TextView tvCity, tvApi, tvCond, tvTmpMin, tvTmpMax, tvUpdate;
-    private ImageView ivLocation, ivRefresh;
+    private ImageView ivLocation, ivRefresh,ivWeatherAbout;
     private BaiduWeatherApi mWeather;
+    private ServiceConnection mServiceConn;
 
     private OnFragmentInteractionListener mListener;
 
@@ -82,7 +89,8 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         final View view = inflater.inflate(R.layout.fragment_main_first, container, false);
         initView(view);
         setClickListener();
-        mWeather = new BaiduWeatherApi(getActivity(), this);
+        mWeather = new BaiduWeatherApi(getActivity());
+        mWeather.setOnConnectionListener(this);
         return view;
     }
 
@@ -102,11 +110,14 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         tvUpdate = (TextView) view.findViewById(R.id.tv_weather_update_time);
         ivLocation = (ImageView) view.findViewById(R.id.iv_weather_location);
         ivRefresh = (ImageView) view.findViewById(R.id.iv_weather_refreshing);
+        ivWeatherAbout = (ImageView) view.findViewById(R.id.iv_weather_about);
     }
 
     private void setClickListener() {
         llCity.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
+        ivRefresh.setOnClickListener(this);
+        ivWeatherAbout.setOnClickListener(this);
     }
 
     @Override
@@ -198,6 +209,21 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 break;
             case R.id.iv_weather_location:
                 //todo 点击自动定位城市
+                mServiceConn = new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName name, IBinder service) {
+                        LogUtil.v("Show_V", "onServiceDisconnected");
+                    }
+
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
+                        LogUtil.v("Show_V", "onServiceConnected");
+                    }
+                };
+                LogUtil.d(getClass(),"---------------onStartService---------------");
+                Intent intent = new Intent(getActivity(), WeatherServer.class);
+                getActivity().startService(intent);
+                getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
                 break;
             case R.id.iv_weather_refreshing:
                 //todo 点击刷新天气信息
