@@ -33,7 +33,7 @@ import com.example.genlan.lonely.util.ScreenUtil;
 /**
  * Created by GenLan on 2016/8/26.
  */
-public class WeatherFragment extends Fragment implements View.OnClickListener, BaiduWeatherApi.OnConnectionSuccessListener {
+public class WeatherFragment extends Fragment implements View.OnClickListener, BaiduWeatherApi.OnConnectionSuccessListener,WeatherServer.onServiceListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private Handler mHandler;
@@ -49,6 +49,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     private BaiduWeatherApi mWeather;
     private ServiceConnection mServiceConn;
     private static boolean mIsServiceBind = false;
+    private WeatherServer mService;
 
     private OnFragmentInteractionListener mListener;
 
@@ -90,8 +91,11 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         final View view = inflater.inflate(R.layout.fragment_main_first, container, false);
         initView(view);
         setClickListener();
+        mService = new WeatherServer();
         mWeather = new BaiduWeatherApi(getActivity());
         mWeather.setOnConnectionListener(this);
+        mService.setServiceListener(this);
+        initService();
         mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -110,6 +114,14 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    private void initService(){
+        LogUtil.d(getClass(),"---------------onStartService---------------");
+        Intent intent = new Intent(getActivity(), WeatherServer.class);
+        mIsServiceBind = true;
+        getActivity().startService(intent);
+        getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
     }
 
     private void initView(View view) {
@@ -221,11 +233,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 break;
             case R.id.iv_weather_location:
                 //todo 点击自动定位城市
-                LogUtil.d(getClass(),"---------------onStartService---------------");
-                Intent intent = new Intent(getActivity(), WeatherServer.class);
-                mIsServiceBind = true;
-                getActivity().startService(intent);
-                getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
                 break;
             case R.id.iv_weather_refreshing:
                 //todo 点击刷新天气信息
@@ -237,9 +244,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mIsServiceBind){
-            getActivity().unbindService(mServiceConn);
-        }
+        getActivity().unbindService(mServiceConn);
     }
 
     @Override
@@ -250,6 +255,16 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     @Override
     public void onFailed(String error) {
         Toast.makeText(getActivity(),"获取出错："+error,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSerCreate() {
+
+    }
+
+    @Override
+    public void onSerDestroy() {
+        getActivity().unbindService(mServiceConn);
     }
 
     public interface OnFragmentInteractionListener {
