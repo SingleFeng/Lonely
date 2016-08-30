@@ -8,10 +8,12 @@ import com.example.genlan.lonely.config.Config;
 import com.example.genlan.lonely.config.ConfigSettings;
 import com.example.genlan.lonely.util.LogUtil;
 
+import org.litepal.LitePalApplication;
+
 /**
  * Created by GenLan on 2016/8/26.
  */
-public class BaseApplication extends Application {
+public class BaseApplication extends LitePalApplication {
 
     private static final String TAG = BaseApplication.class.getSimpleName();
     private boolean isInited = false;

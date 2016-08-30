@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.genlan.lonely.R;
+import com.example.genlan.lonely.data.LocalMusicIndex;
 
 /**
  * Created by GenLan on 2016/8/26.
