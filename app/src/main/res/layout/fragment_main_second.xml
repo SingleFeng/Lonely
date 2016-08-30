@@ -2,10 +2,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_second_content"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/rl_music_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center" >
+
+            <ImageButton
+                android:id="@+id/btn_music_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_music_last"/>
+            <ImageButton
+                android:id="@+id/btn_music_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_music_play"/>
+            <ImageButton
+                android:id="@+id/btn_music_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_music_next"/>
+            <ImageButton
+                android:id="@+id/btn_music_read_in_sdcard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_music_search"/>
+        </LinearLayout>
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:layout_below="@+id/rl_music_title"
+            android:layout_above="@+id/rl_music_bottom"
+            android:id="@+id/lv_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+        <include
+            layout="@layout/item_music_list"
+            android:id="@+id/rl_music_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
 </FrameLayout>

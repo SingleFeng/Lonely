@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_item_music_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示歌曲标题"/>
+    <TextView
+        android:id="@+id/tv_item_music_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示歌手"
+        android:layout_below="@+id/tv_item_music_title"/>
+    <TextView
+        android:id="@+id/tv_item_music_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="显示歌曲持续时间"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

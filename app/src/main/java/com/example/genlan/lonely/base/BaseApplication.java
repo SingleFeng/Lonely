@@ -1,5 +1,6 @@
 package com.example.genlan.lonely.base;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
@@ -18,6 +19,7 @@ public class BaseApplication extends LitePalApplication {
     private static final String TAG = BaseApplication.class.getSimpleName();
     private boolean isInited = false;
     private ApplicationContext mAppContext;
+    private Activity activity;
     private volatile static BaseApplication instance;
     private ConfigSettings mConfig;
 
