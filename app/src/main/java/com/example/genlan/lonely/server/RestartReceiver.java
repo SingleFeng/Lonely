@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.genlan.lonely.activity.MainActivity;
+import com.example.genlan.lonely.util.LogUtil;
 
 /**
  * Created by GenLan on 2016/8/29.
+ *
  */
 public class RestartReceiver extends BroadcastReceiver {
     @Override
@@ -15,6 +17,7 @@ public class RestartReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("com.example.genlan.lonely.restart")) {
             //TODO
             //在这里写重新启动service的相关操作
+            LogUtil.d(getClass(),"Activity被重新创建？   ");
             startUploadService(context);
         }
     }

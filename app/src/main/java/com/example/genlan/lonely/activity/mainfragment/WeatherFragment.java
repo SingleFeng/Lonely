@@ -48,6 +48,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     private ImageView ivLocation, ivRefresh,ivWeatherAbout;
     private BaiduWeatherApi mWeather;
     private ServiceConnection mServiceConn;
+    private static boolean mIsServiceBind = false;
 
     private OnFragmentInteractionListener mListener;
 
@@ -91,6 +92,17 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         setClickListener();
         mWeather = new BaiduWeatherApi(getActivity());
         mWeather.setOnConnectionListener(this);
+        mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                LogUtil.v("Show_V", "onServiceDisconnected");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                LogUtil.v("Show_V", "onServiceConnected");
+            }
+        };
         return view;
     }
 
@@ -209,19 +221,9 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 break;
             case R.id.iv_weather_location:
                 //todo 点击自动定位城市
-                mServiceConn = new ServiceConnection() {
-                    @Override
-                    public void onServiceConnected(ComponentName name, IBinder service) {
-                        LogUtil.v("Show_V", "onServiceDisconnected");
-                    }
-
-                    @Override
-                    public void onServiceDisconnected(ComponentName name) {
-                        LogUtil.v("Show_V", "onServiceConnected");
-                    }
-                };
                 LogUtil.d(getClass(),"---------------onStartService---------------");
                 Intent intent = new Intent(getActivity(), WeatherServer.class);
+                mIsServiceBind = true;
                 getActivity().startService(intent);
                 getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
                 break;
@@ -229,6 +231,14 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 //todo 点击刷新天气信息
                 initRefreshWeather();
                 break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mIsServiceBind){
+            getActivity().unbindService(mServiceConn);
         }
     }
 

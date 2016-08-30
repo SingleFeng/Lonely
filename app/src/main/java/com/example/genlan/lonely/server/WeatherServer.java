@@ -33,18 +33,25 @@ public class WeatherServer extends Service implements BaiduWeatherApi.OnConnecti
     @Override
     public IBinder onBind(Intent intent) {
         LogUtil.d(getClass(),"---------------ServiceOnBind---------------");
-        mWeather.setOnConnectionListener(this);
-        mWeather.getWeather(mConfig.getParameter(Config.HISTORY_CITY));
         return null;
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        LogUtil.d(getClass(),"---------------ServiceOnStartCommand---------------");
+        mWeather.setOnConnectionListener(this);
+        String s = mConfig.getParameter(Config.HISTORY_CITY);
+        mWeather.getWeather(s);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public void onDestroy() {
-        LogUtil.d(getClass(),"---------------ServiceOnCreate---------------");
+        super.onDestroy();
+        LogUtil.d(getClass(),"---------------ServiceOnDestroy---------------");
         stopForeground(true);
         Intent intent = new Intent("com.example.genlan.lonely.restart");
         sendBroadcast(intent);
-        super.onDestroy();
     }
 
     @Override

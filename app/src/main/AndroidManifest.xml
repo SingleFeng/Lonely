@@ -36,7 +36,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".server.WeatherServer">
+        <service android:name=".server.WeatherServer"
+            android:process="com.example.genlan.lonely.weatherService">
 
         </service>
         <receiver android:name=".server.RestartReceiver">
