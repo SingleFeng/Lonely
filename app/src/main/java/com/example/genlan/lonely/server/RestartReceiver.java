@@ -3,8 +3,6 @@ package com.example.genlan.lonely.server;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import com.example.genlan.lonely.activity.MainActivity;
 import com.example.genlan.lonely.util.LogUtil;
 
 /**

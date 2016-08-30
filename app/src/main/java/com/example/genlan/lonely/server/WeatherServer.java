@@ -64,6 +64,7 @@ public class WeatherServer extends Service implements BaiduWeatherApi.OnConnecti
                             mWeather.setOnConnectionListener(WeatherServer.this);
                             String s = mConfig.getParameter(Config.HISTORY_CITY);
                             mWeather.getWeather(s);
+                            LogUtil.d(this.getClass(),"---------------onRefresh---------------");
                         }
                     }
                 }

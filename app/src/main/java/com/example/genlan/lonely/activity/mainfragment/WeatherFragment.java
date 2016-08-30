@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -74,6 +75,25 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         return fragment;
     }
 
+    /*
+     * Fragment的生命周期
+     * onAttach -> onCreate -> onCreateView -> onActivityCreated -> onStart -> onResume
+     * Running...
+     * onPause -> onStop -> onDestroyView -> onDestroy -> onDetach
+     * */
+
+    @Override
+    public void onAttach(Context context) {
+        LogUtil.d(getClass(),"---------------onAttach---------------");
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +108,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        LogUtil.d(getClass(),"---------------onCreateView---------------");
         final View view = inflater.inflate(R.layout.fragment_main_first, container, false);
         initView(view);
         setClickListener();
@@ -95,7 +116,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         mWeather = new BaiduWeatherApi(getActivity());
         mWeather.setOnConnectionListener(this);
         mService.setServiceListener(this);
-        initService();
         mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -107,7 +127,60 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 LogUtil.v("Show_V", "onServiceConnected");
             }
         };
+        initService();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        LogUtil.d(getClass(),"---------------onActivityCreated---------------");
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        LogUtil.d(getClass(),"---------------onStart---------------");
+        super.onStart();
+        getWeatherParam();
+    }
+
+    @Override
+    public void onResume() {
+        LogUtil.d(getClass(),"---------------onResume---------------");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LogUtil.d(getClass(),"---------------onPause---------------");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        LogUtil.d(getClass(),"---------------onStop---------------");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        LogUtil.d(getClass(),"---------------onAttach---------------");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        LogUtil.d(getClass(),"---------------onAttach---------------");
+        super.onDestroy();
+        getActivity().unbindService(mServiceConn);
+    }
+
+
+    @Override
+    public void onDetach() {
+        LogUtil.d(getClass(),"---------------onAttach---------------");
+        super.onDetach();
+        mListener = null;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -144,12 +217,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         ivWeatherAbout.setOnClickListener(this);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getWeatherParam();
-    }
-
     private void getWeatherParam() {
         mConfig = ConfigSettings.getInstance(getActivity());
         if (!mConfig.getParameter(Config.HISTORY_CITY).equals("")) {
@@ -175,27 +242,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         mScreenY = mScreen.getScreenHeigth();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 
     private void setView(WeatherBean data) {
         String temp_cnty = data.getBasic().getCnty();
@@ -239,12 +285,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
                 initRefreshWeather();
                 break;
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unbindService(mServiceConn);
     }
 
     @Override
