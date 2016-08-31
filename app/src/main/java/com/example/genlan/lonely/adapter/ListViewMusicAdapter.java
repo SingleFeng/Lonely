@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.example.genlan.lonely.R;
 import com.example.genlan.lonely.data.LocalMusicIndex;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,9 +71,12 @@ public class ListViewMusicAdapter extends BaseAdapter {
         } else {
             mHolder = (ViewHolder) convertView.getTag();
         }
+        Date date = new Date(mList.get(position).getmMusicDuration());
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+        String dateStr = sdf.format(date);
         mHolder.tvTitle.setText(mList.get(position).getmMusicTitle());
         mHolder.tvArtist.setText(mList.get(position).getmMusicArtist());
-        mHolder.tvDuration.setText(Long.toString(mList.get(position).getmMusicDuration()));
+        mHolder.tvDuration.setText(dateStr);
         return convertView;
     }
 

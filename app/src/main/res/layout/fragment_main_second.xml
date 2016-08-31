@@ -10,47 +10,74 @@
             android:id="@+id/rl_music_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btn_music_last"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_music_last"/>
+                android:src="@drawable/icon_music_last" />
+
             <ImageButton
                 android:id="@+id/btn_music_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_music_play"/>
+                android:src="@drawable/icon_music_play" />
+
             <ImageButton
                 android:id="@+id/btn_music_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_music_next"/>
+                android:src="@drawable/icon_music_next" />
+
+            <ImageButton
+                android:id="@+id/btn_music_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_music_stop" />
+
             <ImageButton
                 android:id="@+id/btn_music_read_in_sdcard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_music_search"/>
+                android:src="@drawable/icon_music_search" />
         </LinearLayout>
 
         <com.handmark.pulltorefresh.library.PullToRefreshListView
-            android:layout_below="@+id/rl_music_title"
-            android:layout_above="@+id/rl_music_bottom"
             android:id="@+id/lv_music"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/rl_music_progress"
+            android:layout_below="@+id/rl_music_title">
 
         </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
-        <include
-            layout="@layout/item_music_list"
-            android:id="@+id/rl_music_bottom"
+        <RelativeLayout
+            android:id="@+id/rl_music_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
+            android:layout_above="@+id/rl_music_bottom">
 
+            <ProgressBar
+                android:id="@+id/pb_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+            <SeekBar
+                android:id="@+id/sb_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/rl_music_bottom"
+            layout="@layout/item_music_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
+
 
 </FrameLayout>

@@ -3,6 +3,7 @@ package com.example.genlan.lonely.server;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -22,7 +23,13 @@ public class MusicService extends Service {
 
     private MediaPlayer myMediaPlayer;
     private static int mMusicIndex;
+    private static int mMusicCount;
     private static boolean isFirstCreate;
+    private static onPlayingListener mListener;
+
+    public void setPlayingListener(onPlayingListener mListener) {
+        this.mListener = mListener;
+    }
 
     @Override
     public void onCreate() {
@@ -46,16 +53,16 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogUtil.d(getClass(),"---------------onStartCommand---------------");
+        LogUtil.d(getClass(), "---------------onStartCommand---------------");
         mMusicIndex = intent.getIntExtra(Config.MUSIC_INDEX, 0);
         boolean isPlay = intent.getBooleanExtra(Config.MUSIC_IS_PLAYING, false);
         LogUtil.d(getClass(), "传值：" + mMusicIndex);
         List<LocalMusicIndex> list = DataSupport.findAll(LocalMusicIndex.class);
         if (isPlay) {
-            LogUtil.d(getClass(),"---------------onStartCommand_true---------------");
+            LogUtil.d(getClass(), "---------------onStartCommand_true---------------");
             myMediaPlayer.pause();
         } else {
-            LogUtil.d(getClass(),"---------------onStartCommand_false---------------");
+            LogUtil.d(getClass(), "---------------onStartCommand_false---------------");
             if (isFirstCreate) playMusic(list);
             else myMediaPlayer.start();
         }
@@ -64,7 +71,9 @@ public class MusicService extends Service {
 
     private void playMusic(final List<LocalMusicIndex> list) {
         isFirstCreate = false;
+        mMusicCount = list.size();
         String path = list.get(mMusicIndex).getmMusicUrl();
+        mListener.onPlaying(list.get(mMusicIndex));
         try {
             myMediaPlayer.reset();
             myMediaPlayer.setDataSource(path);
@@ -75,6 +84,9 @@ public class MusicService extends Service {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     // TODO Auto-generated method stub
+                    if (mMusicIndex <= mMusicCount - 1) {
+                        mMusicIndex = mMusicIndex + 1;
+                    } else mMusicIndex = 0;
                     playMusic(list);
                 }
             });
@@ -82,5 +94,36 @@ public class MusicService extends Service {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
+
+    public class MyBind extends Binder {
+        //获取歌曲长度
+        public int getMusicDuration() {
+            int rtn = 0;
+            if (myMediaPlayer != null) {
+                rtn = myMediaPlayer.getDuration();
+            }
+            return rtn;
+        }
+
+        //获取当前播放进度
+        public int getMusicCurrentPosition() {
+            int rtn = 0;
+            if (myMediaPlayer != null) {
+                rtn = myMediaPlayer.getCurrentPosition();
+            }
+            return rtn;
+        }
+
+        public void seekTo(int position) {
+            if (myMediaPlayer != null) {
+                myMediaPlayer.seekTo(position);
+            }
+        }
+
+    }
+
+    public interface onPlayingListener {
+        void onPlaying(LocalMusicIndex music);
     }
 }

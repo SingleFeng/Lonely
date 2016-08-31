@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:background="@drawable/bg_music_controller">
 
     <TextView
         android:id="@+id/tv_item_music_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="显示歌曲标题"/>
+        android:text="显示歌曲标题"
+        android:textColor="@color/colorWhite"/>
     <TextView
         android:id="@+id/tv_item_music_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="显示歌手"
+        android:textColor="@color/colorWhite"
         android:layout_below="@+id/tv_item_music_title"/>
     <TextView
         android:id="@+id/tv_item_music_duration"
@@ -20,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="显示歌曲持续时间"
+        android:textColor="@color/colorWhite"
         android:layout_centerVertical="true"/>
 
 </RelativeLayout>

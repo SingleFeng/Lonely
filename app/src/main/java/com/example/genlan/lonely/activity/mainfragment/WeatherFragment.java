@@ -193,7 +193,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         };
         Intent intent = new Intent(getActivity(), WeatherService.class);
 //        getActivity().startService(intent);
-        getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
+//        getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
     }
 
     private void initView(View view) {
