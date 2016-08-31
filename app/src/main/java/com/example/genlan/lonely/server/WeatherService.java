@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import com.example.genlan.lonely.R;
 import com.example.genlan.lonely.activity.MainActivity;
@@ -15,13 +14,10 @@ import com.example.genlan.lonely.connection.BaiduWeatherApi;
 import com.example.genlan.lonely.data.WeatherBean;
 import com.example.genlan.lonely.util.LogUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by GenLan on 2016/8/29.
  */
-public class WeatherServer extends Service implements BaiduWeatherApi.OnConnectionSuccessListener {
+public class WeatherService extends Service implements BaiduWeatherApi.OnConnectionSuccessListener {
 
     private onServiceListener listener;
     BaiduWeatherApi mWeather;
@@ -61,7 +57,7 @@ public class WeatherServer extends Service implements BaiduWeatherApi.OnConnecti
                         long endTime = System.currentTimeMillis();
                         if (endTime - startTime > SECOND * 60) {
                             startTime = endTime;
-                            mWeather.setOnConnectionListener(WeatherServer.this);
+                            mWeather.setOnConnectionListener(WeatherService.this);
                             String s = mConfig.getParameter(Config.HISTORY_CITY);
                             mWeather.getWeather(s);
                             LogUtil.d(this.getClass(),"---------------onRefresh---------------");

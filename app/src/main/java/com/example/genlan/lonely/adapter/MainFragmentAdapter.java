@@ -14,7 +14,7 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> mFragments;
 
-    private static final String[] TITLE = new String[]{"Weather", "second", "third", "fourth"};
+    private static final String[] TITLE = new String[]{"Weather", "Music", "third", "fourth"};
 
     @Override
     public CharSequence getPageTitle(int position) {

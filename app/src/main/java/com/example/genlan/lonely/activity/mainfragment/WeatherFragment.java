@@ -27,14 +27,14 @@ import com.example.genlan.lonely.config.Config;
 import com.example.genlan.lonely.config.ConfigSettings;
 import com.example.genlan.lonely.connection.BaiduWeatherApi;
 import com.example.genlan.lonely.data.WeatherBean;
-import com.example.genlan.lonely.server.WeatherServer;
+import com.example.genlan.lonely.server.WeatherService;
 import com.example.genlan.lonely.util.LogUtil;
 import com.example.genlan.lonely.util.ScreenUtil;
 
 /**
  * Created by GenLan on 2016/8/26.
  */
-public class WeatherFragment extends Fragment implements View.OnClickListener, BaiduWeatherApi.OnConnectionSuccessListener,WeatherServer.onServiceListener {
+public class WeatherFragment extends Fragment implements View.OnClickListener, BaiduWeatherApi.OnConnectionSuccessListener,WeatherService.onServiceListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private Handler mHandler;
@@ -50,7 +50,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     private BaiduWeatherApi mWeather;
     private ServiceConnection mServiceConn;
     private static boolean mIsServiceBind = false;
-    private WeatherServer mService;
+    private WeatherService mService;
 
     private OnFragmentInteractionListener mListener;
 
@@ -112,7 +112,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         final View view = inflater.inflate(R.layout.fragment_main_first, container, false);
         initView(view);
         setClickListener();
-        mService = new WeatherServer();
+        mService = new WeatherService();
         mWeather = new BaiduWeatherApi(getActivity());
         mWeather.setOnConnectionListener(this);
         mService.setServiceListener(this);
@@ -191,8 +191,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
 
     private void initService(){
         LogUtil.d(getClass(),"---------------onStartService---------------");
-        Intent intent = new Intent(getActivity(), WeatherServer.class);
-        mIsServiceBind = true;
+        Intent intent = new Intent(getActivity(), WeatherService.class);
         getActivity().startService(intent);
         getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
     }

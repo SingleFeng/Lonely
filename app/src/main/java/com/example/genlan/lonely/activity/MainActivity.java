@@ -84,9 +84,9 @@ public class MainActivity extends FragmentActivity implements WeatherFragment.On
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
         no1Fg = WeatherFragment.newInstance("","");
-        no2Fg = new SecondFragment();
-        no3Fg = new ThirdFragment();
-        no4Fg = new FourthFragment();
+        no2Fg = SecondFragment.newInstance("","");
+        no3Fg = ThirdFragment.newInstance("","");
+        no4Fg = FourthFragment.newInstance("","");
     }
 
     /**
@@ -127,9 +127,5 @@ public class MainActivity extends FragmentActivity implements WeatherFragment.On
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        String intent = uri.toString();
-        if (FragmentId.FIRST_FRAGMENT.equals(intent)) {
-
-        }
     }
 }

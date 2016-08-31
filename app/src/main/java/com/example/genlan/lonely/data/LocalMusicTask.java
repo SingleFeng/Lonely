@@ -26,6 +26,7 @@ public class LocalMusicTask extends AsyncTask<Integer,Integer,List<LocalMusicInd
 
     @Override
     protected List<LocalMusicIndex> doInBackground(Integer... params) {
+        DataSupport.deleteAll(LocalMusicIndex.class);
         Cursor cursor = BaseApplication.getInstance().getApplicationContext().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor.getCount() != 0) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {

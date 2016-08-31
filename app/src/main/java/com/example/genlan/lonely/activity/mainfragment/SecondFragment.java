@@ -1,8 +1,13 @@
 package com.example.genlan.lonely.activity.mainfragment;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +18,12 @@ import com.example.genlan.lonely.R;
 import com.example.genlan.lonely.adapter.ListViewMusicAdapter;
 import com.example.genlan.lonely.data.LocalMusicIndex;
 import com.example.genlan.lonely.data.LocalMusicTask;
+import com.example.genlan.lonely.server.MusicService;
+import com.example.genlan.lonely.server.WeatherService;
+import com.example.genlan.lonely.util.LogUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -25,6 +35,7 @@ public class SecondFragment extends Fragment implements View.OnClickListener, Lo
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private PullToRefreshListView mListView;
+    private ServiceConnection mServiceConn;
     private List<LocalMusicIndex> mList;
     private ImageButton btnLast, btnNext, btnPlay, btnSearch;
 
@@ -72,8 +83,18 @@ public class SecondFragment extends Fragment implements View.OnClickListener, Lo
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_second, container, false);
         initButton(view);
-        getData();
         mListView = (PullToRefreshListView) view.findViewById(R.id.lv_music);
+        mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                LogUtil.v("Show_V", "onServiceDisconnected");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                LogUtil.v("Show_V", "onServiceConnected");
+            }
+        };
         return view;
     }
 
@@ -82,10 +103,12 @@ public class SecondFragment extends Fragment implements View.OnClickListener, Lo
         btnNext = (ImageButton) v.findViewById(R.id.btn_music_next);
         btnPlay = (ImageButton) v.findViewById(R.id.btn_music_play);
         btnSearch = (ImageButton) v.findViewById(R.id.btn_music_read_in_sdcard);
+        btnSearch.setOnClickListener(this);
+        btnPlay.setOnClickListener(this);
     }
 
 
-    private void getData() {
+    private void setListView() {
         LocalMusicTask musicTask = new LocalMusicTask();
         musicTask.execute();
         musicTask.setListener(this);
@@ -96,6 +119,12 @@ public class SecondFragment extends Fragment implements View.OnClickListener, Lo
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+            mListView.setAdapter(new ListViewMusicAdapter(DataSupport.findAll(LocalMusicIndex.class), getActivity()));
     }
 
     @Override
@@ -124,12 +153,21 @@ public class SecondFragment extends Fragment implements View.OnClickListener, Lo
             case R.id.btn_music_next:
                 break;
             case R.id.btn_music_play:
+                playMusic();
                 break;
             case R.id.btn_music_read_in_sdcard:
+                setListView();
                 break;
             default:
                 break;
         }
+    }
+
+    private void playMusic(){
+        LogUtil.d(getClass(),"---------------playMusic---------------");
+        Intent intent = new Intent(getActivity(), MusicService.class);
+        getActivity().startService(intent);
+        getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
     }
 
     @Override

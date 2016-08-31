@@ -36,10 +36,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".server.WeatherServer"
+        <service android:name=".server.WeatherService"
             android:process="com.example.genlan.lonely.weatherService">
 
         </service>
+        <service android:name=".server.MusicService"/>
         <receiver android:name=".server.RestartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
