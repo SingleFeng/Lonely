@@ -6,32 +6,28 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TabHost;
 
 import com.example.genlan.lonely.R;
 import com.example.genlan.lonely.activity.mainfragment.FourthFragment;
-import com.example.genlan.lonely.activity.mainfragment.FragmentId;
-import com.example.genlan.lonely.activity.mainfragment.SecondFragment;
+import com.example.genlan.lonely.activity.mainfragment.MusicFragment;
 import com.example.genlan.lonely.activity.mainfragment.ThirdFragment;
 import com.example.genlan.lonely.activity.mainfragment.WeatherFragment;
 import com.example.genlan.lonely.adapter.MainFragmentAdapter;
 import com.example.genlan.lonely.util.LogUtil;
 import com.example.genlan.lonely.util.ScreenUtil;
-import com.example.genlan.lonely.view.LeftMenuViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements WeatherFragment.OnFragmentInteractionListener, SecondFragment.OnFragmentInteractionListener,ThirdFragment.OnFragmentInteractionListener,FourthFragment.OnFragmentInteractionListener {
+public class MainActivity extends FragmentActivity implements WeatherFragment.OnFragmentInteractionListener, MusicFragment.OnFragmentInteractionListener,ThirdFragment.OnFragmentInteractionListener,FourthFragment.OnFragmentInteractionListener {
 
     WeatherFragment no1Fg;
-    SecondFragment no2Fg;
+    MusicFragment no2Fg;
     ThirdFragment no3Fg;
     FourthFragment no4Fg;
     ScreenUtil mScreen;
@@ -84,7 +80,7 @@ public class MainActivity extends FragmentActivity implements WeatherFragment.On
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
         no1Fg = WeatherFragment.newInstance("","");
-        no2Fg = SecondFragment.newInstance("","");
+        no2Fg = MusicFragment.newInstance("","");
         no3Fg = ThirdFragment.newInstance("","");
         no4Fg = FourthFragment.newInstance("","");
     }

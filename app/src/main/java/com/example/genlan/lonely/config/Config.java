@@ -62,6 +62,16 @@ public class Config {
      * */
     public static final String HISTORY_API = "weather_api";
 
+    /**
+     * 音乐序号标签
+     * */
+    public static final String MUSIC_INDEX = "music_index";
+
+    /**
+     * 音乐是否在播放
+     * */
+    public static final String MUSIC_IS_PLAYING = "music_is_playing";
+
     public static final String TRUE = "1";
     public static final String FALSE ="0";
 }

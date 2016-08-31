@@ -109,24 +109,9 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         LogUtil.d(getClass(),"---------------onCreateView---------------");
-        final View view = inflater.inflate(R.layout.fragment_main_first, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_first, container, false);
         initView(view);
         setClickListener();
-        mService = new WeatherService();
-        mWeather = new BaiduWeatherApi(getActivity());
-        mWeather.setOnConnectionListener(this);
-        mService.setServiceListener(this);
-        mServiceConn = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                LogUtil.v("Show_V", "onServiceDisconnected");
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                LogUtil.v("Show_V", "onServiceConnected");
-            }
-        };
         initService();
         return view;
     }
@@ -191,8 +176,23 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
 
     private void initService(){
         LogUtil.d(getClass(),"---------------onStartService---------------");
+        mService = new WeatherService();
+        mWeather = new BaiduWeatherApi(getActivity());
+        mWeather.setOnConnectionListener(this);
+        mService.setServiceListener(this);
+        mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                LogUtil.v("Show_V", "onServiceDisconnected");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                LogUtil.v("Show_V", "onServiceConnected");
+            }
+        };
         Intent intent = new Intent(getActivity(), WeatherService.class);
-        getActivity().startService(intent);
+//        getActivity().startService(intent);
         getActivity().bindService(intent,mServiceConn, Service.BIND_AUTO_CREATE);
     }
 
