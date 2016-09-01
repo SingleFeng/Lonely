@@ -1,6 +1,5 @@
 package com.example.genlan.lonely.activity.mainfragment;
 
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -26,9 +24,6 @@ import com.example.genlan.lonely.data.LocalMusicTask;
 import com.example.genlan.lonely.server.MusicService;
 import com.example.genlan.lonely.util.LogUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
-import org.litepal.crud.DataSupport;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,19 +40,17 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
     private PullToRefreshListView mListView;
     private ImageButton btnLast, btnNext, btnPlay, btnSearch, btnStop;
     private TextView tvOnPlayTitle, tvOnPlayArtist, tvOnPlayTime;
-    //    private ProgressBar pb;
     private SeekBar sbr;
 
-    private List<LocalMusicIndex> mList;
-    private boolean isPlaying = false;
-    private static int mMusicIndex;
-    private static int mMusicCount;
+    private static boolean isPlaying = false;
+    private static boolean isRegistered = false;
+    private static int mMusicIndex = 0;
+    private static int mMusicCount = 0;
 
     private MusicService musicService;
-    private MusicService.MyBind mybind;
+    private MusicService.MyBind myBind;
     private ServiceConnection serviceConnection;
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -111,10 +104,13 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
                 playMusic(mMusicIndex);
             }
         });
-//        initServiceConnection();
+        initServiceConnection();
         return view;
     }
 
+    /**
+     * 控件初始化
+     */
     private void initButton(View v) {
         btnLast = (ImageButton) v.findViewById(R.id.btn_music_last);
         btnNext = (ImageButton) v.findViewById(R.id.btn_music_next);
@@ -180,6 +176,9 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
         mListener = null;
     }
 
+    /**
+     * View点击事件回调
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -219,9 +218,12 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
      * 停止音乐播放
      */
     private void stopMusicService() {
-        Intent intent = new Intent(getActivity(), MusicService.class);
-        getActivity().stopService(intent);
-//        getActivity().unbindService(serviceConnection);
+        if (isRegistered) {
+            Intent intent = new Intent(getActivity(), MusicService.class);
+            getActivity().unbindService(serviceConnection);
+            isRegistered = false;
+            getActivity().stopService(intent);
+        }
     }
 
     /*
@@ -248,7 +250,9 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
             btnPlay.setImageResource(R.drawable.icon_music_play);
         }
         getActivity().startService(intent);
-//        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        musicService.setPlayingListener(this);
+        isRegistered = true;
+        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     /**
@@ -264,25 +268,29 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
         isPlaying = true;
         btnPlay.setImageResource(R.drawable.icon_music_pause);
         getActivity().startService(intent);
-//        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         musicService.setPlayingListener(this);
+        isRegistered = true;
     }
 
+    /**
+     * 初始化BindServer启动方式的连接
+     */
     private void initServiceConnection() {
         if (serviceConnection == null) {
             serviceConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    mybind = (MusicService.MyBind) service;
+                    myBind = (MusicService.MyBind) service;
                     //设置进度条的最大长度
-                    int max = mybind.getMusicDuration();
+                    int max = myBind.getMusicDuration();
 //                    pb.setMax(max);
                     sbr.setMax(max);
                     sbr.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                            mybind.seekTo(progress);
+                            if (fromUser)
+                            myBind.seekTo(progress);
                         }
 
                         @Override
@@ -296,19 +304,19 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
                         }
                     });
 
-                    //连接之后启动子线程设置当前进度
                     new Thread() {
                         public void run() {
                             //改变当前进度条的值
                             //设置当前进度
                             while (true) {
-//                                pb.setProgress(mybind.getMusicCurrentPosition());
-                                sbr.setProgress(mybind.getMusicCurrentPosition());
-//                                try {
-//                                    Thread.sleep(100);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
+                                try {
+                                    Thread.sleep(100);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+//                                pb.setProgress(myBind.getMusicCurrentPosition());
+//                                sbr.setProgress(myBind.getMusicCurrentPosition());
+                                sbr.setProgress(isRegistered?myBind.getMusicCurrentPosition():0);
                             }
                         }
                     }.start();
@@ -323,11 +331,17 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
         }
     }
 
+    /**
+     * LocalMusicTask异步查询结果回调
+     */
     @Override
     public void onSuccess(List<LocalMusicIndex> list) {
         mListView.setAdapter(new ListViewMusicAdapter(list, getActivity()));
     }
 
+    /**
+     * MusicService音乐播放状态回调
+     */
     @Override
     public void onPlaying(LocalMusicIndex music) {
         tvOnPlayTitle.setText(music.getmMusicTitle());
@@ -335,9 +349,11 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
         Date date = new Date(music.getmMusicDuration());
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         String dateStr = sdf.format(date);
+//        String dateStr = SimpleDateFormat.getTimeInstance().format("mm:ss");
         tvOnPlayTime.setText(dateStr);
         musicService.setPlayingListener(this);
     }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

@@ -112,7 +112,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
         View view = inflater.inflate(R.layout.fragment_main_first, container, false);
         initView(view);
         setClickListener();
-        initService();
+//        initService();
         return view;
     }
 
@@ -130,40 +130,16 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     }
 
     @Override
-    public void onResume() {
-        LogUtil.d(getClass(),"---------------onResume---------------");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        LogUtil.d(getClass(),"---------------onPause---------------");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        LogUtil.d(getClass(),"---------------onStop---------------");
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        LogUtil.d(getClass(),"---------------onAttach---------------");
-        super.onDestroyView();
-    }
-
-    @Override
     public void onDestroy() {
-        LogUtil.d(getClass(),"---------------onAttach---------------");
+        LogUtil.d(getClass(),"---------------onDestroy---------------");
         super.onDestroy();
-        getActivity().unbindService(mServiceConn);
+//        getActivity().unbindService(mServiceConn);
     }
 
 
     @Override
     public void onDetach() {
-        LogUtil.d(getClass(),"---------------onAttach---------------");
+        LogUtil.d(getClass(),"---------------onDetach---------------");
         super.onDetach();
         mListener = null;
     }

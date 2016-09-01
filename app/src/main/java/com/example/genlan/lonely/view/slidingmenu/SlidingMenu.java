@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 
 /**
  * Created by GenLan on 2016/8/29.
+ *
  */
 public class SlidingMenu extends RelativeLayout{
 

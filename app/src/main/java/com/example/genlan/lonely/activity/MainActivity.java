@@ -47,8 +47,8 @@ public class MainActivity extends FragmentActivity implements WeatherFragment.On
         initFragment();
         initViewPager();
         initTabPage();
-
     }
+
 
     /**
      * 获取屏幕属性

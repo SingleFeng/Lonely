@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by GenLan on 2016/8/30.
+ * 音乐的后台播放服务
  */
 public class MusicService extends Service {
 
@@ -26,9 +27,10 @@ public class MusicService extends Service {
     private static int mMusicCount;
     private static boolean isFirstCreate;
     private static onPlayingListener mListener;
+    private MyBind myBind = new MyBind();
 
     public void setPlayingListener(onPlayingListener mListener) {
-        this.mListener = mListener;
+        MusicService.mListener = mListener;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class MusicService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return myBind;
     }
 
     @Override
@@ -108,11 +110,10 @@ public class MusicService extends Service {
 
         //获取当前播放进度
         public int getMusicCurrentPosition() {
-            int rtn = 0;
             if (myMediaPlayer != null) {
-                rtn = myMediaPlayer.getCurrentPosition();
+                return myMediaPlayer.getCurrentPosition();
             }
-            return rtn;
+            return 0;
         }
 
         public void seekTo(int position) {

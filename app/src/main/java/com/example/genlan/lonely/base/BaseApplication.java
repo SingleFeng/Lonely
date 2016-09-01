@@ -49,6 +49,7 @@ public class BaseApplication extends LitePalApplication {
         long begin = System.currentTimeMillis();
         ApiStoreSDK.init(this, Config.WEATHER_KEY);
         mConfig = ConfigSettings.getInstance(this);
+        LogUtil.setDebug(true);
         isInited = true;
         LogUtil.e(TAG, String.format("启动时间: %d(ms)", (System.currentTimeMillis() - begin)));
     }
