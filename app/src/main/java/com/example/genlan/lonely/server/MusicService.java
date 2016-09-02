@@ -68,7 +68,7 @@ public class MusicService extends Service {
         mMusicIndex = intent.getIntExtra(Config.MUSIC_INDEX, 0);
         boolean isPlay = intent.getBooleanExtra(Config.MUSIC_IS_PLAYING, false);
         List<LocalMusicIndex> list = DataSupport.findAll(LocalMusicIndex.class);
-        initPlay(isPlay,list);
+        initPlay(isPlay, list);
 //        initNotification(list);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -94,19 +94,19 @@ public class MusicService extends Service {
         startForeground(0x111, notification);
     }*/
 
-    private void initNotification(List<LocalMusicIndex> list){
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,new Intent(this, MainActivity.class),0);
+    private void initNotification(List<LocalMusicIndex> list) {
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
         Notification notification = new Notification.Builder(getApplicationContext())
                 .setContentTitle(list.get(mMusicIndex).getmMusicTitle())
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentIntent(pendingIntent)
-                .setProgress(myMediaPlayer.getDuration(),myMediaPlayer.getCurrentPosition(),true)
+                .setProgress(myMediaPlayer.getDuration(), myMediaPlayer.getCurrentPosition(), true)
                 .setDeleteIntent(null)
                 .build();
         startForeground(0x111, notification);
     }
 
-    private void initPlay(boolean isPlay,List<LocalMusicIndex> list){
+    private void initPlay(boolean isPlay, List<LocalMusicIndex> list) {
         if (isPlay) {
             myMediaPlayer.pause();
         } else {
@@ -156,8 +156,8 @@ public class MusicService extends Service {
         public int getMusicCurrentPosition() {
             if (myMediaPlayer != null) {
                 return myMediaPlayer.getCurrentPosition();
-            }
-            return 0;
+            } else
+                return 0;
         }
 
         public void seekTo(int position) {
@@ -166,14 +166,14 @@ public class MusicService extends Service {
             }
         }
 
-        public void musicPause(){
-            if (myMediaPlayer != null){
+        public void musicPause() {
+            if (myMediaPlayer != null) {
                 myMediaPlayer.pause();
             }
         }
 
-        public void musicRestart(){
-            if (myMediaPlayer != null){
+        public void musicRestart() {
+            if (myMediaPlayer != null) {
                 myMediaPlayer.start();
             }
         }

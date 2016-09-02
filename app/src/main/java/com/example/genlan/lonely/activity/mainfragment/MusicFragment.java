@@ -252,7 +252,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
      */
     private void playMusic() {
         LogUtil.d(getClass(), "---------------playMusic---------------");
-        isRegistered = true;
+
         Intent intent = new Intent(getActivity(), MusicService.class);
         if (!isPlaying) {
             LogUtil.d(getClass(), "---------------playMusic_True---------------");
@@ -272,6 +272,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
             musicService.setPlayingListener(this);
             getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
+        isRegistered = true;
 
     }
 
@@ -325,7 +326,6 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
 
                         }
                     });
-
                     new Thread() {
                         public void run() {
                             //改变当前进度条的值
@@ -333,11 +333,11 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Loc
                             while (true) {
                                 try {
                                     Thread.sleep(100);
+                                    sbr.setProgress(isPlaying ? myBind.getMusicCurrentPosition() : 0);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 //                                pb.setProgress(myBind.getMusicCurrentPosition());
-//                                sbr.setProgress(isRegistered ? myBind.getMusicCurrentPosition() : 0);
 //                                sbr.setProgress(myBind.getMusicCurrentPosition());
 //                                sbr.setProgress(mConfig.getBooleanParameter(Config.MUSIC_IS_REGISTERED)?myBind.getMusicCurrentPosition():0);
                             }
