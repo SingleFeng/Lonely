@@ -57,6 +57,10 @@ public class ConfigSettings {
         mapParam.put(Config.HISTORY_TMP_MIN, "");
         mapParam.put(Config.HISTORY_COND, "");
         mapParam.put(Config.HISTORY_API, "");
+        setParameter(Config.MUSIC_INDEX,0);
+        setParameter(Config.MUSIC_COUNT,0);
+        setParameter(Config.MUSIC_IS_PLAYING,false);
+        setParameter(Config.MUSIC_IS_REGISTERED,false);
         return loadDefaultParameter(mapParam);
     }
 
@@ -102,7 +106,9 @@ public class ConfigSettings {
      * @return
      */
     public boolean setParameter(String key, boolean value) {
-        return setParameter(key, value ? Config.TRUE : Config.FALSE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean(key, value);
+        return editor.commit();
     }
 
     /**
@@ -113,7 +119,9 @@ public class ConfigSettings {
      * @return
      */
     public boolean setParameter(String key, int value) {
-        return setParameter(key, Integer.toString(value));
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putInt(key, value);
+        return editor.commit();
     }
 
     /**
@@ -124,5 +132,11 @@ public class ConfigSettings {
      */
     public String getParameter(String key) {
         return mPrefs.getString(key, "");
+    }
+    public boolean getBooleanParameter(String key) {
+        return mPrefs.getBoolean(key, false);
+    }
+    public int getIntParameter(String key) {
+        return mPrefs.getInt(key, 0);
     }
 }

@@ -55,7 +55,7 @@ public class WeatherService extends Service implements BaiduWeatherApi.OnConnect
                     long startTime = System.currentTimeMillis();
                     while (runFlag) {
                         long endTime = System.currentTimeMillis();
-                        if (endTime - startTime > SECOND * 60) {
+                        if (endTime - startTime > SECOND * 60 * 60) {
                             startTime = endTime;
                             mWeather.setOnConnectionListener(WeatherService.this);
                             String s = mConfig.getParameter(Config.HISTORY_CITY);

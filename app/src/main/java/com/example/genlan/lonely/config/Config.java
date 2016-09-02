@@ -68,9 +68,19 @@ public class Config {
     public static final String MUSIC_INDEX = "music_index";
 
     /**
+     * 音乐总数
+     * */
+    public static final String MUSIC_COUNT = "music_count";
+
+    /**
      * 音乐是否在播放
      * */
     public static final String MUSIC_IS_PLAYING = "music_is_playing";
+
+    /**
+     * 音乐服务是否注册
+     * */
+    public static final String MUSIC_IS_REGISTERED = "music_is_registered";
 
     public static final String TRUE = "1";
     public static final String FALSE ="0";

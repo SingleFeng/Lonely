@@ -1,6 +1,5 @@
 package com.example.genlan.lonely.activity.mainfragment;
 
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -109,10 +108,11 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         LogUtil.d(getClass(),"---------------onCreateView---------------");
-        View view = inflater.inflate(R.layout.fragment_main_first, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_weather, container, false);
+        mWeather = new BaiduWeatherApi(getActivity());
         initView(view);
         setClickListener();
-//        initService();
+        initService();
         return view;
     }
 
@@ -133,7 +133,7 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     public void onDestroy() {
         LogUtil.d(getClass(),"---------------onDestroy---------------");
         super.onDestroy();
-//        getActivity().unbindService(mServiceConn);
+        getActivity().unbindService(mServiceConn);
     }
 
 
@@ -153,7 +153,6 @@ public class WeatherFragment extends Fragment implements View.OnClickListener, B
     private void initService(){
         LogUtil.d(getClass(),"---------------onStartService---------------");
         mService = new WeatherService();
-        mWeather = new BaiduWeatherApi(getActivity());
         mWeather.setOnConnectionListener(this);
         mService.setServiceListener(this);
         mServiceConn = new ServiceConnection() {
